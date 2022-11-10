@@ -1,0 +1,31 @@
+{
+  "name": "i18next-backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/Afrosiyob/i18next-backend.git",
+  "author": "Afrosiyob <45900728+Afrosiyob@users.noreply.github.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/cors": "^2.8.12",
+    "@types/express": "^4.17.14",
+    "@types/node": "^18.11.9",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^4.8.4"
+  },
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only src/app.ts",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@types/config": "^3.3.0",
+    "@types/pino": "^7.0.5",
+    "config": "^3.3.8",
+    "cors": "^2.8.5",
+    "dayjs": "^1.11.6",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "pino": "^8.7.0",
+    "pino-pretty": "^9.1.1",
+    "zod": "^3.19.1"
+  }
+}

@@ -10,11 +10,14 @@ const params = {
 
 const payload = {
   body: object({
-    key: string({
+    tag: string({
       required_error: "Key is required",
     }),
-    value: string({
-      required_error: "Value is required",
+    en: string({
+      required_error: "en is required",
+    }),
+    uz: string({
+      required_error: "uz is required",
     }),
   }),
 };

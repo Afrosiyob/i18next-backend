@@ -6,12 +6,38 @@ import {
   UpdateTagInput,
 } from "../schema/tag.schema";
 
+import { jsonReader, readJsonFile } from "../utils/readFile";
+import { findKey } from "../service/tag.service";
+import { writeFile } from "../utils/writeFile";
+
 export const createTagHandler = async (
   req: Request<{}, {}, CreateTagInput["body"]>,
   res: Response
 ) => {
   const body = req.body;
-  console.log(body);
+
+  const key = body.tag;
+
+  jsonReader("/locales/en/translation.json", (err: any, data: object) => {
+    if (err) {
+      console.log(err);
+    } else {
+      // @ts-ignore
+      data[key] = body.en;
+      writeFile("/locales/en/translation.json", data);
+    }
+  });
+
+  jsonReader("/locales/uz/translation.json", (err: any, data: object) => {
+    if (err) {
+      console.log(err);
+    } else {
+      // @ts-ignore
+      data[key] = body.uz;
+      writeFile("/locales/uz/translation.json", data);
+    }
+  });
+
   return res.sendStatus(200);
 };
 
@@ -21,22 +47,38 @@ export const updateTagHandler = async (
 ) => {
   const key = req.params.key;
 
-  console.log(key);
+  let en: object = readJsonFile("/locales/en/translation.json");
+  let uz: object = readJsonFile("/locales/uz/translation.json");
 
-  const update = req.body;
+  const isHasTagEn = findKey(key, en);
+  const isHasTagUz = findKey(key, uz);
 
-  console.log(update);
+  if (isHasTagEn && isHasTagUz) {
+    const update = req.body;
 
-  // const product = await findProduct({ productId });
+    jsonReader("/locales/en/translation.json", (err: any, data: object) => {
+      if (err) {
+        console.log(err);
+      } else {
+        // @ts-ignore
+        data[key] = update.en;
+        writeFile("/locales/en/translation.json", data);
+      }
+    });
 
-  // if (!product) return res.sendStatus(404);
-
-  // if (String(product.user) !== userId) return res.sendStatus(403);
-
-  // const updatedProduct = await findAndUpdateProduct({ productId }, update, {
-  //   new: true,
-  // });
-  return res.sendStatus(200);
+    jsonReader("/locales/uz/translation.json", (err: any, data: object) => {
+      if (err) {
+        console.log(err);
+      } else {
+        // @ts-ignore
+        data[key] = update.uz;
+        writeFile("/locales/uz/translation.json", data);
+      }
+    });
+    return res.sendStatus(200);
+  } else {
+    return res.sendStatus(404);
+  }
 };
 
 export const getTagHandler = async (
@@ -45,20 +87,19 @@ export const getTagHandler = async (
 ) => {
   const key = req.params.key;
 
-  console.log(key);
+  let en: object = readJsonFile("/locales/en/translation.json");
+  let uz: object = readJsonFile("/locales/uz/translation.json");
 
-  // const product = await findProduct({ productId });
+  const isHasTagEn = findKey(key, en);
+  const isHasTagUz = findKey(key, uz);
 
-  // if (!product) return res.sendStatus(404);
-
-  return res.sendStatus(200);
-};
-
-export const getAllTagHandler = async (req: Request, res: Response) => {
-  // const userId = res.locals.user._id;
-  // const products = getAllProduct({ user: userId });
-  // console.log(products);
-  return res.sendStatus(200);
+  if (isHasTagEn && isHasTagUz) {
+    return res.send({
+      data: [en[key as keyof typeof en], uz[key as keyof typeof uz]],
+    });
+  } else {
+    return res.sendStatus(404);
+  }
 };
 
 export const deleteTagHandler = async (
@@ -66,15 +107,37 @@ export const deleteTagHandler = async (
   res: Response
 ) => {
   const key = req.params.key;
-  console.log(key);
 
-  // const product = await findProduct({ productId });
+  let en: object = readJsonFile("/locales/en/translation.json");
+  let uz: object = readJsonFile("/locales/uz/translation.json");
 
-  // if (!product) return res.sendStatus(404);
+  const isHasTagEn = findKey(key, en);
+  const isHasTagUz = findKey(key, uz);
 
-  // if (String(product.user) !== userId) return res.sendStatus(403);
+  if (isHasTagEn && isHasTagUz) {
+    jsonReader("/locales/en/translation.json", (err: any, data: object) => {
+      if (err) {
+        console.log(err);
+      } else {
+        // @ts-ignore
+        delete data[key];
 
-  // await deleteProduct({ productId });
+        writeFile("/locales/en/translation.json", data);
+      }
+    });
 
-  return res.sendStatus(200);
+    jsonReader("/locales/uz/translation.json", (err: any, data: object) => {
+      if (err) {
+        console.log(err);
+      } else {
+        // @ts-ignore
+        delete data[key];
+
+        writeFile("/locales/uz/translation.json", data);
+      }
+    });
+    return res.sendStatus(200);
+  } else {
+    return res.sendStatus(404);
+  }
 };

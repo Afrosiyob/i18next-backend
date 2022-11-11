@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { AnyZodObject } from "zod";
+import { findKey } from "../service/tag.service";
+import { readJsonFile } from "../utils/readFile";
 
 export const validate =
   (schema: AnyZodObject) =>
@@ -15,3 +17,20 @@ export const validate =
       return res.status(400).send(error.message);
     }
   };
+
+export const isKey = (req: Request, res: Response, next: NextFunction) => {
+  const key = req.params.key;
+  let en: object = readJsonFile("/locales/en/translation.json");
+  let uz: object = readJsonFile("/locales/uz/translation.json");
+
+  const isHasTagEn = findKey(key, en);
+  const isHasTagUz = findKey(key, uz);
+
+  if (isHasTagEn && isHasTagUz) {
+    next();
+  } else {
+    return res.status(400).send({
+      message: "Not found tag...",
+    });
+  }
+};

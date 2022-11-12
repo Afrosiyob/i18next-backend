@@ -20,7 +20,7 @@ app.use(
 );
 app.use("/locales", express.static("locales"));
 
-app.listen(parseInt(PORT), LOCAL_ADDRESS, async () => {
+app.listen(8080, LOCAL_ADDRESS, async () => {
   logger.info(`App is running at http://localhost:${PORT} `);
   routes(app);
   // swaggerDocs(app, PORT);

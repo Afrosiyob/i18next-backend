@@ -1,5 +1,4 @@
 import express, { NextFunction, Request, Response } from "express";
-import config from "config";
 import routes from "./core/routes";
 import logger from "./utils/log";
 import cors from "cors";

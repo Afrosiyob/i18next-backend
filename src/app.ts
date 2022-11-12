@@ -4,8 +4,14 @@ import logger from "./utils/log";
 import cors from "cors";
 
 const app = express();
-const PORT = process.env.PORT || 8080;
-const { LOCAL_ADDRESS = "0.0.0.0" } = process.env;
+
+let PORT = process.env.PORT || 8080;
+
+if (PORT == null || PORT == "") PORT = 8080;
+
+if (typeof PORT === "string") PORT = parseInt(PORT);
+
+let LOCAL_ADDRESS = process.env.LOCAL_ADDRESS || "0.0.0.0";
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -21,8 +27,7 @@ app.use(
 );
 app.use("/locales", express.static("locales"));
 
-app.listen(8080, LOCAL_ADDRESS, async () => {
+app.listen(PORT, LOCAL_ADDRESS, async () => {
   logger.info(`App is running at http://localhost:${PORT} `);
   routes(app);
-  // swaggerDocs(app, PORT);
 });

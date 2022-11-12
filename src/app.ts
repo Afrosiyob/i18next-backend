@@ -5,7 +5,7 @@ import logger from "./utils/log";
 import cors from "cors";
 
 const app = express();
-const PORT = config.get<number>("PORT") || 8080;
+const { PORT = 8080, LOCAL_ADDRESS = "0.0.0.0" } = process.env;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -21,7 +21,7 @@ app.use(
 );
 app.use("/locales", express.static("locales"));
 
-app.listen(PORT, async () => {
+app.listen(parseInt(PORT), LOCAL_ADDRESS, async () => {
   logger.info(`App is running at http://localhost:${PORT} `);
   routes(app);
   // swaggerDocs(app, PORT);

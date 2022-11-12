@@ -4,7 +4,8 @@ import logger from "./utils/log";
 import cors from "cors";
 
 const app = express();
-const { PORT = 8080, LOCAL_ADDRESS = "0.0.0.0" } = process.env;
+const PORT = process.env.PORT || 8080;
+const { LOCAL_ADDRESS = "0.0.0.0" } = process.env;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

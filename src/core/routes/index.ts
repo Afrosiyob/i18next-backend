@@ -14,6 +14,10 @@ import {
 } from "../schema/tag.schema";
 
 const routes = (app: Express) => {
+  app.get("/", (req, res, next) => {
+    res.send("Hello");
+  });
+
   app.post("/api/tag", [validate(createTagSchema)], createTagHandler);
 
   app.get("/api/tag/:key", [validate(getTagSchema)], getTagHandler);

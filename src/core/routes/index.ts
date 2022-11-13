@@ -1,4 +1,5 @@
-import { Express } from "express";
+import { Express, NextFunction, Request, Response } from "express";
+import { clientBuild } from "../../app";
 import {
   createTagHandler,
   deleteTagHandler,
@@ -14,8 +15,8 @@ import {
 } from "../schema/tag.schema";
 
 const routes = (app: Express) => {
-  app.get("/", (req, res, next) => {
-    res.send("Hello");
+  app.get("/*", (req: Request, res: Response, next: NextFunction) => {
+    res.sendFile(clientBuild);
   });
 
   app.post("/api/tag", [validate(createTagSchema)], createTagHandler);

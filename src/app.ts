@@ -2,6 +2,7 @@ import express, { NextFunction, Request, Response } from "express";
 import routes from "./core/routes";
 import logger from "./utils/log";
 import cors from "cors";
+import path from "path";
 
 const app = express();
 
@@ -26,6 +27,9 @@ app.use(
   })
 );
 app.use("/locales", express.static("locales"));
+export const clientBuild = path.join(__dirname, "../client/build");
+
+app.use(express.static(clientBuild));
 
 app.listen(PORT, LOCAL_ADDRESS, async () => {
   logger.info(`App is running at http://localhost:${PORT} `);

@@ -20,8 +20,8 @@
   },
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/app.ts",
-    "install": "cd client && yarn install",
-    "build": "tsc && cd client && yarn build",
+    "install": "cd client && npm run install",
+    "build": "tsc && cd client && npm run build",
     "start": "node build/app.js"
   },
   "dependencies": {

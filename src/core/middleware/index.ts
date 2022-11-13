@@ -18,8 +18,7 @@ export const validate =
     }
   };
 
-export const isKey = (req: Request, res: Response, next: NextFunction) => {
-  const key = req.params.key;
+export const isKey = (key: string) => {
   let en: object = readJsonFile("/locales/en/translation.json");
   let uz: object = readJsonFile("/locales/uz/translation.json");
 
@@ -27,10 +26,8 @@ export const isKey = (req: Request, res: Response, next: NextFunction) => {
   const isHasTagUz = findKey(key, uz);
 
   if (isHasTagEn && isHasTagUz) {
-    next();
+    return true;
   } else {
-    return res.status(400).send({
-      message: "Not found tag...",
-    });
+    return false;
   }
 };

@@ -9,6 +9,7 @@ import {
 import { jsonReader, readJsonFile } from "../utils/readFile";
 import { findKey } from "../service/tag.service";
 import { writeFile } from "../utils/writeFile";
+import { isKey } from "../middleware";
 
 export const createTagHandler = async (
   req: Request<{}, {}, CreateTagInput["body"]>,
@@ -18,27 +19,35 @@ export const createTagHandler = async (
 
   const key = body.tag;
 
-  jsonReader("/locales/en/translation.json", (err: any, data: object) => {
-    if (err) {
-      console.log(err);
-    } else {
-      // @ts-ignore
-      data[key] = body.en;
-      writeFile("/locales/en/translation.json", data);
-    }
-  });
+  const handleKey = isKey(key);
 
-  jsonReader("/locales/uz/translation.json", (err: any, data: object) => {
-    if (err) {
-      console.log(err);
-    } else {
-      // @ts-ignore
-      data[key] = body.uz;
-      writeFile("/locales/uz/translation.json", data);
-    }
-  });
+  if (handleKey) {
+    return res.sendStatus(400).send({
+      message: "enter other tag name",
+    });
+  } else {
+    jsonReader("/locales/en/translation.json", (err: any, data: object) => {
+      if (err) {
+        console.log(err);
+      } else {
+        // @ts-ignore
+        data[key] = body.en;
+        writeFile("/locales/en/translation.json", data);
+      }
+    });
 
-  return res.sendStatus(200);
+    jsonReader("/locales/uz/translation.json", (err: any, data: object) => {
+      if (err) {
+        console.log(err);
+      } else {
+        // @ts-ignore
+        data[key] = body.uz;
+        writeFile("/locales/uz/translation.json", data);
+      }
+    });
+
+    return res.sendStatus(200);
+  }
 };
 
 export const updateTagHandler = async (
